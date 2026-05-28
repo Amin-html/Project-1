@@ -69,6 +69,8 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_URL = '/accounts/login/'
+
 WSGI_APPLICATION = 'tracbooking.wsgi.application'
 
 

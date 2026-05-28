@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Мои бронирования</title>
+    <style>
+        body { font-family: Arial; background: #1a1a1a; color: white; padding: 20px; }
+        h1 { color: #e74c3c; }
+        .card {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            max-width: 600px;
+        }
+        .track-name { color: #e74c3c; font-size: 20px; font-weight: bold; }
+        .price { color: #e74c3c; font-size: 22px; font-weight: bold; }
+        .info { color: #aaa; margin: 5px 0; }
+        a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a href="/tracks/">← Все треки</a>
+    <h1>🏁 Мои бронирования</h1>
+
+    {% if bookings %}
+        {% for booking in bookings %}
+        <div class="card">
+            <p class="track-name">{{ booking.track.name }}</p>
+            <p class="info">📅 {{ booking.date }}</p>
+            <p class="info">⏰ {{ booking.start_time }} — {{ booking.end_time }}</p>
+            <p class="price">{{ booking.total_price }} сом</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>У тебя пока нет бронирований. <a href="/tracks/">Выбрать трек</a></p>
+    {% endif %}
+</body>
+</html>

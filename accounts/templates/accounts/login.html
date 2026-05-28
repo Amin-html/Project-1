@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Вход</title>
+    <style>
+        body { font-family: Arial; background: #1a1a1a; color: white; padding: 20px; }
+        .card {
+            background: #2a2a2a;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 400px;
+        }
+        h1 { color: #e74c3c; }
+        label { display: block; margin: 15px 0 5px; color: #aaa; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        a { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔐 Вход</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p style="color:#e74c3c;">{{ field.errors }}</p>
+                {% endif %}
+            {% endfor %}
+            <button type="submit">Войти</button>
+        </form>
+        <p style="margin-top:15px;">Нет аккаунта? <a href="/accounts/register/">Зарегистрироваться</a></p>
+    </div>
+</body>
+</html>

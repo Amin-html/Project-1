@@ -1,3 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Booking
+from .forms import BookingForm
+from tracks.models import Track
 
+@login_required
+def booking_create(request, track_pk):
+    track = get_object_or_404(Track, pk=track_pk)
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.user = request.user
+            booking.track = track
+
+            start = form.cleaned_data['start_time']
+            end = form.cleaned_data['end_time']
+            hours = (end.hour - start.hour)
+            booking.total_price = hours * track.price_per_hour
+
+            booking.save()
+            return redirect('my_bookings')
+    else:
+        form = BookingForm()
+
+    return render(request, 'bookings/booking_create.html', {
+        'form': form,
+        'track': track,
+    })
+
+@login_required
+def my_bookings(request):
+    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'bookings/my_bookings.html', {'bookings': bookings})
 # Create your views here.
