@@ -11,17 +11,27 @@ def booking_create(request, track_pk):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.track = track
+            date = form.cleaned_data['date']
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
 
-            start = form.cleaned_data['start_time']
-            end = form.cleaned_data['end_time']
-            hours = (end.hour - start.hour)
-            booking.total_price = hours * track.price_per_hour
-
-            booking.save()
-            return redirect('my_bookings')
+            # проверяем пересечение времени
+            conflict = Booking.objects.filter(
+                track=track,
+                date=date,
+                start_time__lt=start_time, # начало раньше нашего конца
+                end_time__gt=end_time,  # конец позже нашего начала
+            ).exists()
+            if conflict:
+                form.add_error(None, 'Это время уже занято! Выберите другое.')
+            else:
+                booking = form.save(commit=False)
+                booking.user = request.user
+                booking.track = track
+                hours = end_time.hour - start_time.hour
+                booking.total_price = hours * track.price_per_hour
+                booking.save()
+                return redirect('my_bookings')
     else:
         form = BookingForm()
 

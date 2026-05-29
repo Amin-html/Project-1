@@ -54,6 +54,17 @@
             <p class="price">{{ track.price_per_hour }} сом/час</p>
         </div>
 
+    {% if form.non_field_errors %}
+        <div style="
+            background: #c0392b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        ">
+            ⚠️ {{ form.non_field_errors.0 }}
+        </div>
+    {% endif %}
+
         <form method="POST">
             {% csrf_token %}
             {% for field in form %}
@@ -64,6 +75,7 @@
                 {% endif %}
             {% endfor %}
             <button type="submit">🏎️ Забронировать</button>
+
         </form>
     </div>
 </body>
