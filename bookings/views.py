@@ -34,4 +34,12 @@ def booking_create(request, track_pk):
 def my_bookings(request):
     bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'bookings/my_bookings.html', {'bookings': bookings})
+
+@login_required
+def booking_cancel(request, pk):
+    booking = get_object_or_404(Booking, pk=pk, user=request.user)
+    if request.method == 'POST':
+        booking.delete()
+        return redirect('my_bookings')
+    return render(request, 'bookings/booking_cancel.html', {'booking': booking})
 # Create your views here.
